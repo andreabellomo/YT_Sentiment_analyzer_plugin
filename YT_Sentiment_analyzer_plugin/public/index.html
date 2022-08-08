@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <title>Youtube Clone</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <img src="img/logo1.PNG" class="logo" alt="">
+        <div class="search-box">
+            <input type="text" class="search-bar" placeholder="search">
+            <button class="search-btn"><img src="img/search.PNG" alt=""></button>
+        </div>
+    </nav>
+
+    <!-- sidebar -->
+    <div class="side-bar">
+        <a href="#" class="links active"><img src="img/home.PNG" alt="">home</a>
+        <a href="analyzer.html" class="links"><img src="img/video.PNG" alt="">sentiment analyzer</a>
+    </div>
+
+    <!-- videos -->
+    <div class="video-container">
+        <div id="snackbar">URL copiato negli appunti</div>
+    </div>
+
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script src="app.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script> var socket = io.connect('http://localhost:8080');</script>
+
+</body>
+
+</html>
