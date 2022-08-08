@@ -26,6 +26,7 @@ Mette a disposizione anche un interfaccia che simula la ricerca di un video su Y
 - [ffmpeg-static](https://ffmpeg.org/)
 - [wink-sentiment](https://winkjs.org/wink-sentiment/)
 - [youtube-mp3-downloader](https://github.com/ytb2mp3/youtube-mp3-downloader#readme)
+- express 4.18.1
 - npm 8.11.0
  
  
