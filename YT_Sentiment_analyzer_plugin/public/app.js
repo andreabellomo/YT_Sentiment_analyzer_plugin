@@ -64,15 +64,10 @@ const makeVideoCard = (data, id) => {
 function popUp() {
     var x = document.getElementById("snackbar");
 
-    // Add the "show" class to DIV
     x.className = "show";
 
-    // After 3 seconds, remove the show class from DIV
     setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
 }
-//onclick=()=>{navigator.clipboard.writeText('https://youtube.com/watch?v=${data.id}')};
-//<div class="video" onclick="copia(${data.id})"></div>
-// search bar
 
 const searchInput = document.querySelector('.search-bar');
 const searchBtn = document.querySelector('.search-btn');
@@ -108,8 +103,5 @@ get_video_url = () => {
     return url;
 }
 
-//const search_url = `https://www.googleapis.com/youtube/v3/search?key=${API_KEY}
-//&part=snippet&q=${search}&maxResults=${maxResults}&type=video`;
-//https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=50&q=the%20show&type=video&videoType=any&key=AIzaSyBggO5YmBvsnDLIdno18ky8WNFK2E-MTfc
 
 
