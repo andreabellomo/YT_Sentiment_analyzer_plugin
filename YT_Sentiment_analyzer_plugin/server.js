@@ -10,9 +10,9 @@ app.use(express.static("./public"));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-app.get("/api/data", (req, res) => {
-  res.json(database.getRisultato());
-});
+//app.get("/api/data", (req, res) => {
+ // res.json(database.getRisultato());
+//});
 
 
 
@@ -64,9 +64,6 @@ function analyzer(data,res) {
 
   YD.download(id_video)
 
-
-
-
   YD.on('progress', data => {
     console.log(data.progress.percentage + '% downloaded')
   })
@@ -87,7 +84,6 @@ function analyzer(data,res) {
 
     let result = await deepgram.transcription.preRecorded(file, options).catch(e => console.log(e))
     let transcript = result.results.channels[0].alternatives[0].transcript
-    //console.log("ou mbare : ",transcript);
 
     let sentimento = sentiment(transcript);
     console.dir(sentimento.score);
