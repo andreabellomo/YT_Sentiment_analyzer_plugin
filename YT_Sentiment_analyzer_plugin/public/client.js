@@ -1,7 +1,6 @@
 $(document).ready(() => {
 
     const sendDataToServer = () => {
-        //prendiamo gli input
 
         const payload = {};
         input = $("#input1");
