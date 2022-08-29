@@ -22,7 +22,7 @@ fetch(video_http + new URLSearchParams({
     })
     .catch(err => console.log(err));
 
-const getChannelIcon = (video_data) => {
+const getIcona = (video_data) => {
     fetch(channel_http + new URLSearchParams({
         key: api_key,
         part: 'snippet',
@@ -40,11 +40,11 @@ const getChannelIcon = (video_data) => {
                 console.log("sono qua 2 ", id);
             }
 
-            makeVideoCard(video_data, id);
+            VideoCard(video_data, id);
         })
 }
 
-const makeVideoCard = (data, id) => {
+const VideoCard = (data, id) => {
     //console.log(data.id);
     videoCardContainer.innerHTML += `
     <div class="video" onclick="navigator.clipboard.writeText('https://youtube.com/watch?v=${id}');popUp()">    
@@ -90,7 +90,7 @@ searchBtn.addEventListener('click', () => {
         .then(res => res.json())
         .then(data => {
             data.items.forEach(item => {
-                getChannelIcon(item);
+                getIcona(item);
             })
         })
         .catch(err => console.log(err));
