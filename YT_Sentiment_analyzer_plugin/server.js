@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 
 const database = require("./my_modules/database");
+const { MongoClient } = require('mongodb')
 
 const PORT = 8080;
 
@@ -11,20 +12,20 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 //app.get("/api/data", (req, res) => {
- // res.json(database.getRisultato());
+// res.json(database.getRisultato());
 //});
 
 
 
-app.post("/api/data", async(req, res) => {
+app.post("/api/data", async (req, res) => {
   const newData = req.body;
   console.log("sono qui")
   //database.insertUrl(newData);
   //res.json({error : false});
 
-  analyzer(newData,res);
+  analyzer(newData, res);
   //console.log("x: " + x);
-  
+
 
 });
 
@@ -49,57 +50,101 @@ var sentiment = require('wink-sentiment');
 //var sentiment = new Sentiment();
 
 
-function analyzer(data,res) {
+
+
+function analyzer(data, res) {
+
+ 
+
   let url = data.url + "&";
   console.log("url: " + url);
   let id_video = url.substring(url.indexOf('?') + 3, url.indexOf('&'));
   console.log("id: " + id_video);
 
 
-  const YD = new YoutubeMp3Downloader({
-    ffmpegPath: ffmpeg,
-    outputPath: './',
-    youtubeVideoQuality: 'highestaudio'
-  })
-
-  YD.download(id_video)
-
-  YD.on('progress', data => {
-    console.log(data.progress.percentage + '% downloaded')
-  })
-
-  YD.on('finished', async (err, video) => {
-    console.log("video" + video);
-    let videoFileName = video.file
-    console.log(`Downloaded ${videoFileName}`)
-
-    let file = {
-      buffer: fs.readFileSync(videoFileName),
-      mimetype: 'audio/mp3'
+  fs.readFile('data.txt', 'utf-8', function read(err, data) {
+    if (err) {
+      throw err;
     }
-    console.log("file: " + file);
-    let options = {
-      punctuate: true, language: "it"
+    arr = data.split(' ');
+    console.log(arr)
+    let trovato = 0
+    for (i = 0; i < arr.length; i++) {
+      console.log(arr[i] + " " + id_video)
+      if (arr[i].localeCompare(id_video) == 0) {
+        trovato = 1
+        console.log("gia fatto" + arr[i + 1])
+        let ressp = {
+          'result_of_video': arr[i + 1]
+
+        }
+        database.insertRisultato(ressp);
+        res.json(database.getRisultato())
+        break;
+
+      }
     }
+      if (trovato == 0) {
+        console.log("eh nooooo")
 
-    let result = await deepgram.transcription.preRecorded(file, options).catch(e => console.log(e))
-    let transcript = result.results.channels[0].alternatives[0].transcript
+        const YD = new YoutubeMp3Downloader({
+          ffmpegPath: ffmpeg,
+          outputPath: './',
+          youtubeVideoQuality: 'highestaudio'
+        })
 
-    let sentimento = sentiment(transcript);
-    console.dir(sentimento.score);
-    //database.insertRisultato(sentimento.score);
+        YD.download(id_video)
 
-    let ressp = {
-      'result_of_video': sentimento.score
-    }
+        YD.on('progress', data => {
+          console.log(data.progress.percentage + '% downloaded')
+        })
+
+        YD.on('finished', async (err, video) => {
+          console.log("video" + video);
+          let videoFileName = video.file 
+          console.log(videoFileName)
+          console.log(`Downloaded ${videoFileName}`)
+
+          let file = {
+            buffer: fs.readFileSync(videoFileName),
+            mimetype: 'audio/mp3'
+          }
+
+          console.log("file: " + file);
+          let options = {
+            punctuate: true, language: "it"
+          }
+
+          let result = await deepgram.transcription.preRecorded(file, options).catch(e => console.log(e))
+          let transcript = result.results.channels[0].alternatives[0].transcript
+
+          let sentimento = sentiment(transcript);
+          console.dir(sentimento);
+          //a.WriteLine(id_video + " " + sentimento.score);
+          //database.insertRisultato(sentimento.score);
+
+          let ressp = {
+            'result_of_video': sentimento.score
+          }
 
 
-    database.insertRisultato(ressp);
+          database.insertRisultato(ressp);
 
-    //fs.writeFileSync(`${videoFileName}.txt`, transcript, () => `Wrote ${videoFileName}.txt`)
-    fs.unlinkSync(videoFileName)
-    res.json(database.getRisultato())
+          //fs.writeFileSync(`${videoFileName}.txt`, transcript, () => `Wrote ${videoFileName}.txt`)
+          fs.appendFile('data.txt', id_video + " " + sentimento.score + " ", () => `Wrote ${videoFileName}.txt`);
+          fs.unlinkSync(videoFileName)
+          res.json(database.getRisultato())
+
+
+        })
+        
+      }
     
-  })
 
+
+
+   
+
+
+  })
 }

@@ -43,11 +43,11 @@ const getChannelIcon = (video_data) => {
             makeVideoCard(video_data, id);
         })
 }
-
+//import {sendDataToServer} from "client.js"
 const makeVideoCard = (data, id) => {
     //console.log(data.id);
     videoCardContainer.innerHTML += `
-    <div class="video" onclick="navigator.clipboard.writeText('https://youtube.com/watch?v=${id}');popUp()">    
+    <div class="video" onclick="sendDataToServer('https://youtube.com/watch?v=${id}')">    
         <img src="${data.snippet.thumbnails.high.url}" class="thumbnail" alt="">
         <div class="content">
             <img src="${data.channelThumbnail}" class="channel-icon" alt="">
@@ -59,14 +59,6 @@ const makeVideoCard = (data, id) => {
     </div>
     <div id="snackbar">URL copiato negli appunti</div>
     `;
-}
-
-function popUp() {
-    var x = document.getElementById("snackbar");
-
-    x.className = "show";
-
-    setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
 }
 
 const searchInput = document.querySelector('.search-bar');
@@ -104,4 +96,67 @@ get_video_url = () => {
 }
 
 
+    const sendDataToServer = (url) => {
 
+        $('body').html(`<!DOCTYPE html>
+            
+            <body>
+                
+                <nav class="navbar1">
+                    <a href="index.html"><img src="img/logo1.png" class="logo1" alt=""></a>
+                </nav>
+            
+            
+                <div class="load"></div>
+            
+                <div id="risultati">
+            
+                </div>
+            
+                <script src='plugins/jquery/jquery.min.js'></script>
+            
+                <script type="module" src=client.js ></script>
+            </body>
+            `)
+            
+        console.log("sono stata chiamata")
+       // window.location = "analyzer.html"
+        const payload = {};
+        //input = $("#input1");
+
+        payload["url"] = url;
+
+        //request(payload).then((resp)=>{
+        //    console.log("resp " + resp);
+        //});
+        const $contenitore = $("#risultati");
+        const $load = $(".load");
+        if (payload["url"] != "") {
+
+            fetch('/api/data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            }).then((response) => response.json())
+                .then((data) => {
+                    let html = "";
+                    console.log(data[data.length - 1].result_of_video);
+                    if (data[data.length - 1].result_of_video >= 0) {
+                        $contenitore.css("background-color", "green");
+                        html = "<h1> Lo Score del video è : " + data[data.length - 1].result_of_video + " ed è POSITIVO </h1>";
+                    } else {
+                        $contenitore.css("background-color", "red");
+                        html = "<h1> Lo Score del video è : " + data[data.length - 1].result_of_video + " ed è NEGATIVO </h1> ";
+                    }
+
+                    $contenitore.html(html);
+                    $load.css("display", "none");
+                })
+
+        }
+
+    };
+
+   
