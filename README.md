@@ -1,6 +1,6 @@
 <p align="center">
   <a href="" rel="noopener">
- <img width=200px height=200px src="https://upload.wikimedia.org/wikipedia/commons/e/e1/Logo_of_YouTube_%282015-2017%29.svg" alt="Project logo"></a>
+ <img width=200px height=200px src="https://thevideoanalyst.com/wp-content/uploads/2015/08/Video-Analyst-Large-Logo2.png" alt="Project logo"></a>
 </p>
 
 <h3 align="center">YT_Sentiment_analyzer_plugin </h3>
